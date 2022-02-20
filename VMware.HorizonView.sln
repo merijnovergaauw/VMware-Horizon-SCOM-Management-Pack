@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{D4B43EB3-688B-4EEE-86BD-088F0B28ABB3}") = "VMware.HorizonView.Discovery", "VMware.HorizonView.Discovery\VMware.HorizonView.Discovery.mpproj", "{CB0168E5-F692-4AA3-A025-A9980F6AA17A}"
+EndProject
+Project("{D4B43EB3-688B-4EEE-86BD-088F0B28ABB3}") = "VMware.HorizonView.Monitoring", "VMware.HorizonView.Monitoring\VMware.HorizonView.Monitoring.mpproj", "{3433C8F9-5AF3-47DD-81E1-C040B8A06F5A}"
+EndProject
+Project("{D4B43EB3-688B-4EEE-86BD-088F0B28ABB3}") = "VMware.HorizonView.Views", "VMware.HorizonView.Views\VMware.HorizonView.Views.mpproj", "{668AE82A-2AFF-4432-858A-C433F6ACC37E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CB0168E5-F692-4AA3-A025-A9980F6AA17A}.Debug|x86.ActiveCfg = Debug|x86
+		{CB0168E5-F692-4AA3-A025-A9980F6AA17A}.Debug|x86.Build.0 = Debug|x86
+		{CB0168E5-F692-4AA3-A025-A9980F6AA17A}.Release|x86.ActiveCfg = Release|x86
+		{CB0168E5-F692-4AA3-A025-A9980F6AA17A}.Release|x86.Build.0 = Release|x86
+		{3433C8F9-5AF3-47DD-81E1-C040B8A06F5A}.Debug|x86.ActiveCfg = Debug|x86
+		{3433C8F9-5AF3-47DD-81E1-C040B8A06F5A}.Debug|x86.Build.0 = Debug|x86
+		{3433C8F9-5AF3-47DD-81E1-C040B8A06F5A}.Release|x86.ActiveCfg = Release|x86
+		{3433C8F9-5AF3-47DD-81E1-C040B8A06F5A}.Release|x86.Build.0 = Release|x86
+		{668AE82A-2AFF-4432-858A-C433F6ACC37E}.Debug|x86.ActiveCfg = Debug|x86
+		{668AE82A-2AFF-4432-858A-C433F6ACC37E}.Debug|x86.Build.0 = Debug|x86
+		{668AE82A-2AFF-4432-858A-C433F6ACC37E}.Release|x86.ActiveCfg = Release|x86
+		{668AE82A-2AFF-4432-858A-C433F6ACC37E}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

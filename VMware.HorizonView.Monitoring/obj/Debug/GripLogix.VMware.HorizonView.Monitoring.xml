@@ -1,0 +1,1727 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ManagementPack SchemaVersion="2.0" ContentReadable="true" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Manifest>
+    <Identity>
+      <ID>GripLogix.VMware.HorizonView.Monitoring</ID>
+      <Version>1.0.0.22</Version>
+    </Identity>
+    <Name>VMware.HorizonView.Monitoring</Name>
+    <References>
+      <Reference Alias="MSDL">
+        <ID>Microsoft.SystemCenter.DataWarehouse.Library</ID>
+        <Version>7.1.10226.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="SC">
+        <ID>Microsoft.SystemCenter.Library</ID>
+        <Version>7.0.8433.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Windows">
+        <ID>Microsoft.Windows.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Health">
+        <ID>System.Health.Library</ID>
+        <Version>7.0.8433.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="System">
+        <ID>System.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Perf">
+        <ID>System.Performance.Library</ID>
+        <Version>7.0.8433.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="GripLogix">
+        <ID>GripLogix.VMware.HorizonView.Discovery</ID>
+        <Version>1.0.0.22</Version>
+        <PublicKeyToken>1947a4ec16eb327a</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  <TypeDefinitions>
+    <ModuleTypes>
+      <DataSourceModuleType ID="GripLogix.VMware.HorizonView.DataSource.Performance.PropertyBag.Pool" Accessibility="Internal">
+        <Configuration>
+          <xsd:element name="IntervalSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="SyncTime" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="PoolName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="Counter" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation>
+          <Composite>
+            <MemberModules>
+              <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Monitoring.PropertyBag">
+                <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+                <SyncTime>$Config/SyncTime$</SyncTime>
+              </DataSource>
+              <ConditionDetection ID="MapToPerf" TypeID="Perf!System.Performance.DataGenericMapper">
+                <ObjectName>PoolName</ObjectName>
+                <CounterName>$Config/Counter$</CounterName>
+                <InstanceName>$Config/Counter$</InstanceName>
+                <Value>$Data/Property[@Name="$Config/Counter$"]$</Value>
+              </ConditionDetection>
+              <ConditionDetection ID="FilterBags" TypeID="System!System.ExpressionFilter">
+                <Expression>
+                  <And>
+                    <Expression>
+                      <SimpleExpression>
+                        <ValueExpression>
+                          <XPathQuery Type="String">Property[@Name='PoolName']</XPathQuery>
+                        </ValueExpression>
+                        <Operator>Equal</Operator>
+                        <ValueExpression>
+                          <Value Type="String">$Config/PoolName$</Value>
+                        </ValueExpression>
+                      </SimpleExpression>
+                    </Expression>
+                    <Expression>
+                      <Exists>
+                        <ValueExpression>
+                          <XPathQuery Type="Integer">Property[@Name='$Config/Counter$']</XPathQuery>
+                        </ValueExpression>
+                      </Exists>
+                    </Expression>
+                  </And>
+                </Expression>
+              </ConditionDetection>
+            </MemberModules>
+            <Composition>
+              <Node ID="MapToPerf">
+                <Node ID="FilterBags">
+                  <Node ID="DS" />
+                </Node>
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>Perf!System.Performance.Data</OutputType>
+      </DataSourceModuleType>
+      <DataSourceModuleType ID="GripLogix.VMware.HorizonView.DataSource.Performance.PropertyBag.GlobalEntitlement" Accessibility="Internal">
+        <Configuration>
+          <xsd:element name="IntervalSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="SyncTime" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="GlobalEntitlementId" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="Counter" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation>
+          <Composite>
+            <MemberModules>
+              <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Monitoring.PropertyBag">
+                <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+                <SyncTime>$Config/SyncTime$</SyncTime>
+              </DataSource>
+              <ConditionDetection ID="MapToPerf" TypeID="Perf!System.Performance.DataGenericMapper">
+                <ObjectName>GlobalEntitlement</ObjectName>
+                <CounterName>$Config/Counter$</CounterName>
+                <InstanceName>$Config/Counter$</InstanceName>
+                <Value>$Data/Property[@Name="$Config/Counter$"]$</Value>
+              </ConditionDetection>
+              <ConditionDetection ID="FilterBags" TypeID="System!System.ExpressionFilter">
+                <Expression>
+                  <And>
+                    <Expression>
+                      <SimpleExpression>
+                        <ValueExpression>
+                          <XPathQuery Type="String">Property[@Name='GlobalEntitlementId']</XPathQuery>
+                        </ValueExpression>
+                        <Operator>Equal</Operator>
+                        <ValueExpression>
+                          <Value Type="String">$Config/GlobalEntitlementId$</Value>
+                        </ValueExpression>
+                      </SimpleExpression>
+                    </Expression>
+                    <Expression>
+                      <Exists>
+                        <ValueExpression>
+                          <XPathQuery Type="Integer">Property[@Name='$Config/Counter$']</XPathQuery>
+                        </ValueExpression>
+                      </Exists>
+                    </Expression>
+                  </And>
+                </Expression>
+              </ConditionDetection>
+            </MemberModules>
+            <Composition>
+              <Node ID="MapToPerf">
+                <Node ID="FilterBags">
+                  <Node ID="DS" />
+                </Node>
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>Perf!System.Performance.Data</OutputType>
+      </DataSourceModuleType>
+      <DataSourceModuleType ID="GripLogix.VMware.HorizonView.DataSource.Performance.PropertyBag.Service" Accessibility="Internal">
+        <Configuration>
+          <xsd:element name="IntervalSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="SyncTime" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="Property" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="Counter" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation>
+          <Composite>
+            <MemberModules>
+              <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Monitoring.PropertyBag">
+                <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+                <SyncTime>$Config/SyncTime$</SyncTime>
+              </DataSource>
+              <ConditionDetection ID="MapToPerf" TypeID="Perf!System.Performance.DataGenericMapper">
+                <ObjectName>DataStore</ObjectName>
+                <CounterName>$Config/Counter$</CounterName>
+                <InstanceName>$Data/Property[@Name="$Config/Property$"]$</InstanceName>
+                <Value>$Data/Property[@Name="$Config/Counter$"]$</Value>
+              </ConditionDetection>
+              <ConditionDetection ID="FilterBags" TypeID="System!System.ExpressionFilter">
+                <Expression>
+                  <Exists>
+                    <ValueExpression>
+                      <XPathQuery Type="Integer">Property[@Name='$Config/Counter$']</XPathQuery>
+                    </ValueExpression>
+                  </Exists>
+                </Expression>
+              </ConditionDetection>
+            </MemberModules>
+            <Composition>
+              <Node ID="MapToPerf">
+                <Node ID="FilterBags">
+                  <Node ID="DS" />
+                </Node>
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>Perf!System.Performance.Data</OutputType>
+      </DataSourceModuleType>
+      <DataSourceModuleType ID="GripLogix.VMware.HorizonView.DataSource.Monitoring.PropertyBag" Accessibility="Internal">
+        <Configuration>
+          <xsd:element name="IntervalSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="SyncTime" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters></OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <DataSource ID="Schedule" TypeID="System!System.SimpleScheduler">
+                <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+                <SyncTime>$Config/SyncTime$</SyncTime>
+              </DataSource>
+              <ProbeAction ID="Script" TypeID="GripLogix.VMware.HorizonView.Probe.Monitoring"></ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="Script">
+                <Node ID="Schedule" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+      </DataSourceModuleType>
+      <DataSourceModuleType ID="GripLogix.VMware.HorizonView.DataSource.Monitoring.PropertyBag.Condition" Accessibility="Internal">
+        <Configuration>
+          <xsd:element name="IntervalSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="SyncTime" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="Counter" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="Threshold" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/Counter$" ParameterType="string" />
+          <OverrideableParameter ID="Counter" Selector="$Config/Counter$" ParameterType="string" />
+          <OverrideableParameter ID="Threshold" Selector="$Config/Threshold$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <DataSource ID="Schedule" TypeID="System!System.SimpleScheduler">
+                <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+                <SyncTime>$Config/SyncTime$</SyncTime>
+              </DataSource>
+              <ProbeAction ID="Script" TypeID="GripLogix.VMware.HorizonView.Probe.Monitoring"></ProbeAction>
+              <ConditionDetection ID="CD" TypeID="System!System.ExpressionFilter">
+                <Expression>
+                  <And>
+                    <Expression>
+                      <Exists>
+                        <ValueExpression>
+                          <XPathQuery Type="Integer">Property[@Name='$Config/Counter$']</XPathQuery>
+                        </ValueExpression>
+                      </Exists>
+                    </Expression>
+                    <Expression>
+                      <SimpleExpression>
+                        <ValueExpression>
+                          <XPathQuery Type="Integer">Property[@Name='$Config/Counter$']</XPathQuery>
+                        </ValueExpression>
+                        <Operator>Less</Operator>
+                        <ValueExpression>
+                          <Value Type="Integer">$Config/Threshold$</Value>
+                        </ValueExpression>
+                      </SimpleExpression>
+                    </Expression>
+                  </And>
+                </Expression>
+              </ConditionDetection>
+            </MemberModules>
+            <Composition>
+              <Node ID="CD">
+                <Node ID="Script">
+                  <Node ID="Schedule" />
+                </Node>
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+      </DataSourceModuleType>
+      <DataSourceModuleType ID="GripLogix.VMware.HorizonView.DataSource.Monitoring.Server.PropertyBag" Accessibility="Internal">
+        <Configuration>
+          <xsd:element name="IntervalSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="SyncTime" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters></OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <DataSource ID="Schedule" TypeID="System!System.SimpleScheduler">
+                <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+                <SyncTime>$Config/SyncTime$</SyncTime>
+              </DataSource>
+              <ProbeAction ID="Script" TypeID="GripLogix.VMware.HorizonView.Probe.Server.Monitoring"></ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="Script">
+                <Node ID="Schedule" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+      </DataSourceModuleType>
+      <ProbeActionModuleType ID="GripLogix.VMware.HorizonView.Probe.Monitoring" Accessibility="Internal">
+        <Configuration></Configuration>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <ProbeAction ID="Script" TypeID="Windows!Microsoft.Windows.PowerShellPropertyBagTriggerOnlyProbe">
+                <ScriptName>HorizonView.Pool.Monitor.ps1</ScriptName>
+                <ScriptBody><![CDATA[## Author: Merijn Overgaauw, GripLogix Consulting
+
+param($domainName, $userName, $password)
+$params = "DomainName: $domainName, UserName: $userName"
+
+# Constants
+$DEBUG = $true
+
+# Constants used for event logging
+$SCRIPT_NAME			= 'HorizonView.Pool.Monitor.ps1'
+$EVENT_LEVEL_ERROR 		= 1
+$EVENT_LEVEL_WARNING 	= 2
+$EVENT_LEVEL_INFO 		= 4
+
+$SCRIPT_STARTED			= 3101
+$PROPERTYBAG_CREATED	= 3102
+$ERROR_GENERATED        = 3103
+$INFO_GENERATED         = 3104
+$SCRIPT_ENDED			= 3105
+
+#==================================================================================
+# Sub:		LogDebugEvent
+# Purpose:	Logs an informational event to the Operations Manager event log
+#			only if Debug argument is true
+#==================================================================================
+function Log-DebugEvent
+	{
+		param($eventNo, $eventLevel, $message)
+
+		$message = "`n" + $message
+		if ($DEBUG)
+		{
+			$api.LogScriptEvent($SCRIPT_NAME,$eventNo,$eventLevel,$message)
+		}
+	}
+#==================================================================================
+
+# Start script by setting up API object
+$api = New-Object -comObject 'MOM.ScriptAPI'
+
+$message = "$SCRIPT_NAME script started. Parameters:`n$params"
+Log-DebugEvent $SCRIPT_STARTED $EVENT_LEVEL_INFO $message
+
+# Load OpsMgr module.
+$operationsManagerCmdletsTest = (Get-Module | % {$_.Name}) -Join ' '
+If (!$operationsManagerCmdletsTest.Contains('OperationsManager'))
+	{
+	$moduleFound = $false
+	$setupKeys = @('HKLM:\Software\Microsoft\Microsoft Operations Manager\3.0\Setup',
+	'HKLM:\SOFTWARE\Microsoft\System Center Operations Manager\12\Setup')
+	foreach($setupKey in $setupKeys)
+		{
+		If ((Test-Path $setupKey) -and ($moduleFound -eq $false))
+			{
+			$setupKey = Get-Item -Path $setupKey
+			$installDirectory = $setupKey.GetValue('InstallDirectory')
+			$psmPath = $installdirectory + '\Powershell\OperationsManager\OperationsManager.psm1'
+			If (Test-Path $psmPath) {$moduleFound = $true}
+			}
+		}
+	If ($moduleFound)
+		{
+		Try {Import-Module $psmPath -ErrorAction Stop}
+		Catch {$message = "Failed to load OpsMgr module. Error: $_"
+		Log-DebugEvent $ERROR_GENERATED $EVENT_LEVEL_ERROR $message}
+		}
+	Else
+		{
+		Try {Import-Module OperationsManager -ErrorAction Stop}
+		Catch {$message = "Failed to load OpsMgr module. Error: $_"
+		Log-DebugEvent $ERROR_GENERATED $EVENT_LEVEL_ERROR $message}
+		}
+	}
+
+# Load PowerCli module.
+Try {
+    Import-Module VMware.VimAutomation.HorizonView -ErrorAction Stop
+    Import-Module VMware.VimAutomation.Core -ErrorAction Stop
+    Import-Module VMware.Hv.Helper -ErrorAction Stop
+    }
+Catch {message = "Import-Module. Error: $_."; Log-DebugEvent $ERROR_GENERATED $EVENT_LEVEL_ERROR $message}
+  
+Try {$hvServers = Get-SCOMClass -Name "GripLogix.VMware.HorizonView.Server" -ErrorAction Stop | Get-SCOMClassInstance | ? {$_.IsAvailable -eq $true} | Sort-Object -Unique @{E={$_.'[GripLogix.VMware.HorizonView.Server].Datacenter'.Value}}}
+Catch {$message = "Get-SCOMClass -Name GripLogix.VMware.HorizonView.Server failed. Error: $_."; Log-DebugEvent $ERROR_GENERATED $EVENT_LEVEL_ERROR $message}
+
+# Create credential
+$secPassword = $password | ConvertTo-SecureString -AsPlainText -Force
+$cred = New-Object System.Management.Automation.PSCredential (("$domainName\$userName"), $secPassword)
+
+# Create array for GlobalEntitlement metrics
+[System.Collections.ArrayList]$geArray = @()
+
+# Get data
+ForEach ($hvServer in $hvServers)
+	{
+    $hvServerName = $hvServer.DisplayName
+ 
+    Try {$hvServer = Connect-HVServer -server $hvServerName -credential $cred -ErrorAction Stop}
+    Catch {$message = "Connect-HVServer failed. Error: $_."; Log-DebugEvent $ERROR_GENERATED $EVENT_LEVEL_ERROR $message}
+  
+	$viewAPI = $hvServer.ExtensionData
+	$query_service = New-Object "Vmware.Hv.QueryServiceService"		
+	$queryDesktopSummaryView = New-Object "Vmware.Hv.QueryDefinition"		
+	$queryDesktopSummaryView.queryEntityType = 'DesktopSummaryView'			
+	$pools = $query_service.QueryService_Query($ViewAPI,$queryDesktopSummaryView)
+    $dataCenter = $viewAPI.Pod.Pod_List() | ? {$_.LocalPod -eq $true}
+	$dataCenterName = $dataCenter.DisplayName
+
+	# Pool data collection
+	$pools.Results.DesktopSummaryData | ? {$_ -ne $null} | % {
+		$poolName = [string]$_.DisplayName
+		$poolGeId = [string]$_.GlobalEntitlement.Id
+		$poolMachinesNumber = [int]$_.NumMachines
+		$poolSessionsNumber = [int]$_.NumSessions
+		If ($poolMachinesNumber) {$poolSessionsPercentage = [math]::Round(($poolSessionsNumber / $poolMachinesNumber) * 100)}
+		Else {$poolSessionsPercentage = $null}
+		$poolAvailableMachinesNumber = $poolMachinesNumber - $poolSessionsNumber
+
+		$bag = $api.CreatePropertyBag()
+		$bag.AddValue('PoolName',$poolName)
+		$bag.AddValue('NumberOfMachines',$poolMachinesNumber)
+		$bag.AddValue('NumberOfSessions',$poolSessionsNumber)
+		If ($poolSessionsPercentage ) {$bag.AddValue('PercentageOfSessions',$poolSessionsPercentage)}
+		$bag.AddValue('NumberOfAvailableMachines',$poolAvailableMachinesNumber)
+		$bag
+
+		$message = "Property bag created.
+		PoolName: $poolName
+		NumberOfMachines: $poolMachinesNumber
+		NumberOfSessions: $poolSessionsNumber
+		PercentageOfSessions: $poolSessionsPercentage
+		NumberOfAvailableMachines: $poolAvailableMachinesNumber
+		Data Center: $dataCenterName
+		Horizon View Server: $hvServerName"
+
+		Log-DebugEvent $PROPERTYBAG_CREATED $EVENT_LEVEL_INFO $message
+
+		# Calculate GlobalEntitlement metrics and create object array
+		If ($poolGeId -ne "")
+			{
+			If (($geArray | % {$_.geId}) -notcontains $poolGeId) 
+				{
+				$psObject = New-Object psObject
+				Add-Member -InputObject $psObject -MemberType NoteProperty -Name geId -value $poolGeId
+				Add-Member -InputObject $psObject -MemberType NoteProperty -Name geMachinesNumber -value $poolMachinesNumber
+				Add-Member -InputObject $psObject -MemberType NoteProperty -Name geSessionsNumber -value $poolSessionsNumber
+				Add-Member -InputObject $psObject -MemberType NoteProperty -Name geSessionsPercentage -value $poolSessionsPercentage
+				Add-Member -InputObject $psObject -MemberType NoteProperty -Name geAvailableMachinesNumber -value $poolAvailableMachinesNumber
+				}
+			Else
+				{
+				$object = $geArray | ? {$_.geId -eq $poolGeId}
+				$geMachinesNumber = $object.geMachinesNumber + $poolMachinesNumber
+				$geSessionsNumber = $object.geSessionsNumber + $poolSessionsNumber
+				If ($geMachinesNumber) {$geSessionsPercentage = [math]::Round(($geSessionsNumber / $geMachinesNumber) * 100)}
+				Else {$geSessionsPercentage = $null}
+				$geAvailableMachinesNumber = $object.geAvailableMachinesNumber + $poolAvailableMachinesNumber
+
+				$geArray.Remove($object)
+
+				$psObject = New-Object psObject
+				Add-Member -InputObject $psObject -MemberType NoteProperty -Name geId -value $poolGeId
+				Add-Member -InputObject $psObject -MemberType NoteProperty -Name geMachinesNumber -value $geMachinesNumber
+				Add-Member -InputObject $psObject -MemberType NoteProperty -Name geSessionsNumber -value $geSessionsNumber
+				Add-Member -InputObject $psObject -MemberType NoteProperty -Name geSessionsPercentage -value $geSessionsPercentage
+				Add-Member -InputObject $psObject -MemberType NoteProperty -Name geAvailableMachinesNumber -value $geAvailableMachinesNumber
+				}
+
+			$geArray = $geArray += $psObject
+			}
+		}	
+		
+	# Machine data collection
+	$queryMachineSummaryView = New-Object "Vmware.Hv.QueryDefinition"  
+	$queryMachineSummaryView.queryEntityType = 'MachineSummaryView'   
+
+    $query_service.QueryService_Query($ViewAPI,$queryMachineSummaryView) | % {$_.Results.Base} | % {
+		$machineName = $_.Name
+		$basicState = $_.BasicState
+
+		$bag = $api.CreatePropertyBag()
+		$bag.AddValue('MachineName',$machineName)
+		$bag.AddValue('BasicState',$basicState)
+		$bag
+
+		$message = "Property bag created.
+		MachineName: $machineName
+		BasicState: $basicState"
+
+		Log-DebugEvent $PROPERTYBAG_CREATED $EVENT_LEVEL_INFO $message
+		}	
+		
+	$hvServer.extensiondata.virtualcenterhealth.virtualcenterhealth_list().datastoredata | % {
+		$dataStoreName = $_.Name
+		$dataStoreCapacity = $_.CapacityMB
+		$dataStoreFreeSpace = $_.FreeSpaceMB
+		If ($dataStoreCapacity) {$dataStoreFreeSpacePercentage = [math]::Round(($dataStoreFreeSpace/$dataStoreCapacity)*100)}
+		Else {$dataStoreFreeSpacePercentage = $null}
+
+		$bag = $api.CreatePropertyBag()
+		$bag.AddValue('DataStoreName',$dataStoreName)
+		$bag.AddValue('DataStoreCapacity',$dataStoreCapacity)
+		$bag.AddValue('DataStoreFreeSpace',$dataStoreFreeSpace)
+		If ($dataStoreFreeSpacePercentage) {$bag.AddValue('DataStoreFreeSpacePercentage',$dataStoreFreeSpacePercentage)}
+		$bag
+
+		$message = "Property bag created.
+		DataStoreName: $dataStoreName
+		DataStoreCapacity: $dataStoreCapacity
+		DataStoreFreeSpace: $dataStoreFreeSpace
+		DataStoreFreeSpacePercentage: $dataStoreFreeSpacePercentage
+		Data Center: $dataCenterName
+		Horizon View Server: $hvServerName"
+
+		Log-DebugEvent $PROPERTYBAG_CREATED $EVENT_LEVEL_INFO $message
+		}									
+	}
+
+Foreach ($geArrayItem in $geArray)
+	{
+	$geId = $geArrayItem.geId
+	$geMachinesNumber = $geArrayItem.geMachinesNumber
+	$geSessionsNumber = $geArrayItem.geSessionsNumber
+	$gePoolSessionsPercentage = $geArrayItem.geSessionsPercentage
+	$geAvailableMachinesNumber = $geArrayItem.geAvailableMachinesNumber
+
+	$bag = $api.CreatePropertyBag()
+	$bag.AddValue('GlobalEntitlementId',$geId)
+	$bag.AddValue('NumberOfMachines',$geMachinesNumber)
+	$bag.AddValue('NumberOfSessions',$geSessionsNumber)
+	If ($gePoolSessionsPercentage) {$bag.AddValue('PercentageOfSessions',$gePoolSessionsPercentage)}
+	$bag.AddValue('NumberOfAvailableMachines',$geAvailableMachinesNumber)
+	$bag
+
+	$message = "Property bag created.
+	GlobalEntitlementId: $geId
+	NumberOfMachines: $geMachinesNumber
+	NumberOfSessions: $geSessionsNumber
+	PercentageOfSessions: $gePoolSessionsPercentage
+	NumberOfAvailableMachines: $geAvailableMachinesNumber"
+
+	Log-DebugEvent $PROPERTYBAG_CREATED $EVENT_LEVEL_INFO $message
+	}
+
+$message = "$SCRIPT_NAME script ended. Parameters:`n$params"
+Log-DebugEvent $SCRIPT_ENDED $EVENT_LEVEL_INFO $message
+]]></ScriptBody>
+                <Parameters>
+                  <Parameter>
+                    <Name>domainName</Name>
+                    <Value>$RunAs[Name="GripLogix!GripLogix.VMware.HorizonView.RunAsProfile"]/Domain$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>userName</Name>
+                    <Value>$RunAs[Name="GripLogix!GripLogix.VMware.HorizonView.RunAsProfile"]/UserName$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>password</Name>
+                    <Value>$RunAs[Name="GripLogix!GripLogix.VMware.HorizonView.RunAsProfile"]/Password$</Value>
+                  </Parameter>
+                </Parameters>
+                <TimeoutSeconds>300</TimeoutSeconds>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="Script" />
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+        <TriggerOnly>true</TriggerOnly>
+      </ProbeActionModuleType>
+      <ProbeActionModuleType ID="GripLogix.VMware.HorizonView.Probe.Server.Monitoring" Accessibility="Internal">
+        <Configuration></Configuration>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <ProbeAction ID="Script" TypeID="Windows!Microsoft.Windows.PowerShellPropertyBagTriggerOnlyProbe">
+                <ScriptName>HorizonView.Server.Monitor.ps1</ScriptName>
+                <ScriptBody><![CDATA[## Author: Merijn Overgaauw, GripLogix Consulting
+
+param($domainName, $userName, $password)
+$params = "DomainName: $domainName, UserName: $userName"
+
+# Constants
+$debug = $true
+
+# Constants used for event logging
+$SCRIPT_NAME			= 'HorizonView.Server.Monitor.ps1'
+$EVENT_LEVEL_ERROR 		= 1
+$EVENT_LEVEL_WARNING 	= 2
+$EVENT_LEVEL_INFO 		= 4
+
+$SCRIPT_STARTED			= 4101
+$PROPERTYBAG_CREATED	= 4102
+$ERROR_GENERATED        = 4103
+$INFO_GENERATED         = 4104
+$SCRIPT_ENDED			= 4105
+
+#==================================================================================
+# Sub:		LogDebugEvent
+# Purpose:	Logs an informational event to the Operations Manager event log
+#			only if Debug argument is true
+#==================================================================================
+function Log-DebugEvent
+	{
+		param($eventNo, $eventLevel, $message)
+
+		$message = "`n" + $message
+		if ($debug)
+		{
+			$api.LogScriptEvent($SCRIPT_NAME,$eventNo,$eventLevel,$message)
+		}
+	}
+#==================================================================================
+
+# Start script by setting up API object
+$api = New-Object -comObject 'MOM.ScriptAPI'
+
+$message = "$SCRIPT_NAME script started. Parameters:`n$params"
+Log-DebugEvent $SCRIPT_STARTED $EVENT_LEVEL_INFO $message
+
+# Load PowerCli module.
+Try {
+    Import-Module VMware.VimAutomation.HorizonView -ErrorAction Stop
+    Import-Module VMware.VimAutomation.Core -ErrorAction Stop
+    }
+Catch {message = "Import-Module. Error: $_."; Log-DebugEvent $ERROR_GENERATED $EVENT_LEVEL_ERROR $message}
+  
+# Create credential
+$secPassword = $password | ConvertTo-SecureString -AsPlainText -Force
+$cred = New-Object System.Management.Automation.PSCredential (("$domainName\$userName"), $secPassword)
+
+# Get data
+Try {$hvServer = Connect-HVServer -server localhost -credential $cred -ErrorAction Stop}
+Catch {$message = "Connect-HVServer failed. Error: $_."; Log-DebugEvent $ERROR_GENERATED $EVENT_LEVEL_ERROR $message}
+
+$horizonViewServerName = $env:computername
+$horizonViewServerFQDN = ([System.Net.Dns]::GetHostByName(($env:computerName))).HostName
+ 
+$hvServer.extensiondata.virtualcenterhealth.virtualcenterhealth_list().hostdata | % {
+	$hostName = $_.Name
+	$hostStatus = $_.Status
+
+	$bag = $api.CreatePropertyBag()
+	$bag.AddValue('HypervisorHostName',$hostName)
+	$bag.AddValue('HypervisorHostConnectionState',$hostStatus)
+	$bag
+
+	$message = "Property bag created.
+	Hypervisor Host Name: $hostName
+	Hypervisor Host Status: $hostStatus"
+
+	Log-DebugEvent $PROPERTYBAG_CREATED $EVENT_LEVEL_INFO $message
+}
+
+$hvServer.extensiondata.ConnectionServerHealth.ConnectionServerHealth_List() | ? {$_.Name -eq $horizonViewServerName} | % {
+	$horizonViewServerName = $_.Name
+	$horizonViewStatus = $_.Status
+
+	$bag = $api.CreatePropertyBag()
+	$bag.AddValue('HorizonViewServerName',$horizonViewServerName)
+	$bag.AddValue('HorizonViewServerStatus',$horizonViewStatus)
+	$bag
+
+	$message = "Property bag created.
+	Horizon View Server Name: $horizonViewServerName
+	Horizon View Server Status: $horizonViewStatus"
+
+	Log-DebugEvent $PROPERTYBAG_CREATED $EVENT_LEVEL_INFO $message
+}
+
+$message = "$SCRIPT_NAME script ended. Parameters:`n$params"
+Log-DebugEvent $SCRIPT_ENDED $EVENT_LEVEL_INFO $message
+]]></ScriptBody>
+                <Parameters>
+                  <Parameter>
+                    <Name>domainName</Name>
+                    <Value>$RunAs[Name="GripLogix!GripLogix.VMware.HorizonView.RunAsProfile"]/Domain$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>userName</Name>
+                    <Value>$RunAs[Name="GripLogix!GripLogix.VMware.HorizonView.RunAsProfile"]/UserName$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>password</Name>
+                    <Value>$RunAs[Name="GripLogix!GripLogix.VMware.HorizonView.RunAsProfile"]/Password$</Value>
+                  </Parameter>
+                </Parameters>
+                <TimeoutSeconds>300</TimeoutSeconds>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="Script" />
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+        <TriggerOnly>true</TriggerOnly>
+      </ProbeActionModuleType>
+    </ModuleTypes>
+    <MonitorTypes>
+      <UnitMonitorType ID="GripLogix.VMware.HorizonView.MonitorType.HorizonViewServer.2state" Accessibility="Internal">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="FAILED" NoDetection="false" />
+          <MonitorTypeState ID="SUCCESS" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element name="IntervalSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="SyncTime" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="Property" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="PropertyExpectedString" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="HorizonViewServerName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="PropertyExpectedString" Selector="$Config/PropertyExpectedString$" ParameterType="string" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Monitoring.Server.PropertyBag">
+              <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+              <SyncTime>$Config/SyncTime$</SyncTime>
+            </DataSource>
+            <ConditionDetection ID="FilterSUCCESSStatus" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='$Config/Property$']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">$Config/PropertyExpectedString$</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="FilterFAILEDStatus" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='$Config/Property$']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>NotEqual</Operator>
+                  <ValueExpression>
+                    <Value Type="String">$Config/PropertyExpectedString$</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="FAILED">
+              <Node ID="FilterFAILEDStatus">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="SUCCESS">
+              <Node ID="FilterSUCCESSStatus">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+      <UnitMonitorType ID="GripLogix.VMware.HorizonView.MonitorType.Pool.2state" Accessibility="Internal">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="FAILED" NoDetection="false" />
+          <MonitorTypeState ID="SUCCESS" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element name="IntervalSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="SyncTime" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="Property" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="PropertyExpectedString" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="PoolName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Monitoring.PropertyBag">
+              <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+              <SyncTime>$Config/SyncTime$</SyncTime>
+            </DataSource>
+            <ConditionDetection ID="FilterSUCCESSStatus" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <And>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="String">Property[@Name='PoolName']</XPathQuery>
+                      </ValueExpression>
+                      <Operator>Equal</Operator>
+                      <ValueExpression>
+                        <Value Type="String">$Config/PoolName$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="String">Property[@Name='$Config/Property$']</XPathQuery>
+                      </ValueExpression>
+                      <Operator>Equal</Operator>
+                      <ValueExpression>
+                        <Value Type="String">$Config/PropertyExpectedString$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                </And>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="FilterFAILEDStatus" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <And>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="String">Property[@Name='PoolName']</XPathQuery>
+                      </ValueExpression>
+                      <Operator>Equal</Operator>
+                      <ValueExpression>
+                        <Value Type="String">$Config/PoolName$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="String">Property[@Name='$Config/Property$']</XPathQuery>
+                      </ValueExpression>
+                      <Operator>NotEqual</Operator>
+                      <ValueExpression>
+                        <Value Type="String">$Config/PropertyExpectedString$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                </And>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="FAILED">
+              <Node ID="FilterFAILEDStatus">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="SUCCESS">
+              <Node ID="FilterSUCCESSStatus">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+      <UnitMonitorType ID="GripLogix.VMware.HorizonView.MonitorType.Pool.Counter.2state.down" Accessibility="Internal">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="FAILED" NoDetection="false" />
+          <MonitorTypeState ID="SUCCESS" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element name="IntervalSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="SyncTime" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="Property" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="PropertyThreshold" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="PoolName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="PropertyThreshold" Selector="$Config/PropertyThreshold$" ParameterType="int" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Monitoring.PropertyBag">
+              <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+              <SyncTime>$Config/SyncTime$</SyncTime>
+            </DataSource>
+            <ConditionDetection ID="FilterSUCCESSStatus" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <And>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="String">Property[@Name='PoolName']</XPathQuery>
+                      </ValueExpression>
+                      <Operator>Equal</Operator>
+                      <ValueExpression>
+                        <Value Type="String">$Config/PoolName$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="Integer">Property[@Name='$Config/Property$']</XPathQuery>
+                      </ValueExpression>
+                      <Operator>GreaterEqual</Operator>
+                      <ValueExpression>
+                        <Value Type="Integer">$Config/PropertyThreshold$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                </And>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="FilterFAILEDStatus" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <And>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="String">Property[@Name='PoolName']</XPathQuery>
+                      </ValueExpression>
+                      <Operator>Equal</Operator>
+                      <ValueExpression>
+                        <Value Type="String">$Config/PoolName$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="Integer">Property[@Name='$Config/Property$']</XPathQuery>
+                      </ValueExpression>
+                      <Operator>Less</Operator>
+                      <ValueExpression>
+                        <Value Type="Integer">$Config/PropertyThreshold$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                </And>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="FAILED">
+              <Node ID="FilterFAILEDStatus">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="SUCCESS">
+              <Node ID="FilterSUCCESSStatus">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+      <UnitMonitorType ID="GripLogix.VMware.HorizonView.MonitorType.Pool.Counter.2state.up" Accessibility="Internal">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="FAILED" NoDetection="false" />
+          <MonitorTypeState ID="SUCCESS" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element name="IntervalSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="SyncTime" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="Property" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="PropertyThreshold" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="PoolName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="PropertyThreshold" Selector="$Config/PropertyThreshold$" ParameterType="int" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Monitoring.PropertyBag">
+              <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+              <SyncTime>$Config/SyncTime$</SyncTime>
+            </DataSource>
+            <ConditionDetection ID="FilterFAILEDStatus" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <And>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="String">Property[@Name='PoolName']</XPathQuery>
+                      </ValueExpression>
+                      <Operator>Equal</Operator>
+                      <ValueExpression>
+                        <Value Type="String">$Config/PoolName$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="Double">Property[@Name='$Config/Property$']</XPathQuery>
+                      </ValueExpression>
+                      <Operator>Greater</Operator>
+                      <ValueExpression>
+                        <Value Type="Integer">$Config/PropertyThreshold$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                </And>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="FilterSUCCESSStatus" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <And>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="String">Property[@Name='PoolName']</XPathQuery>
+                      </ValueExpression>
+                      <Operator>Equal</Operator>
+                      <ValueExpression>
+                        <Value Type="String">$Config/PoolName$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="Double">Property[@Name='$Config/Property$']</XPathQuery>
+                      </ValueExpression>
+                      <Operator>LessEqual</Operator>
+                      <ValueExpression>
+                        <Value Type="Integer">$Config/PropertyThreshold$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                </And>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="FAILED">
+              <Node ID="FilterFAILEDStatus">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="SUCCESS">
+              <Node ID="FilterSUCCESSStatus">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+      <UnitMonitorType ID="GripLogix.VMware.HorizonView.MonitorType.GlobalEntitlement.Counter.2state.up" Accessibility="Internal">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="FAILED" NoDetection="false" />
+          <MonitorTypeState ID="SUCCESS" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element name="IntervalSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="SyncTime" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="Property" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="PropertyThreshold" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="GlobalEntitlementId" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="PropertyThreshold" Selector="$Config/PropertyThreshold$" ParameterType="int" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Monitoring.PropertyBag">
+              <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+              <SyncTime>$Config/SyncTime$</SyncTime>
+            </DataSource>
+            <ConditionDetection ID="FilterFAILEDStatus" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <And>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="String">Property[@Name='GlobalEntitlementId']</XPathQuery>
+                      </ValueExpression>
+                      <Operator>Equal</Operator>
+                      <ValueExpression>
+                        <Value Type="String">$Config/GlobalEntitlementId$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="Double">Property[@Name='$Config/Property$']</XPathQuery>
+                      </ValueExpression>
+                      <Operator>Greater</Operator>
+                      <ValueExpression>
+                        <Value Type="Integer">$Config/PropertyThreshold$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                </And>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="FilterSUCCESSStatus" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <And>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="String">Property[@Name='GlobalEntitlementId']</XPathQuery>
+                      </ValueExpression>
+                      <Operator>Equal</Operator>
+                      <ValueExpression>
+                        <Value Type="String">$Config/GlobalEntitlementId$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="Double">Property[@Name='$Config/Property$']</XPathQuery>
+                      </ValueExpression>
+                      <Operator>LessEqual</Operator>
+                      <ValueExpression>
+                        <Value Type="Integer">$Config/PropertyThreshold$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                </And>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="FAILED">
+              <Node ID="FilterFAILEDStatus">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="SUCCESS">
+              <Node ID="FilterSUCCESSStatus">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+    </MonitorTypes>
+  </TypeDefinitions>
+  <Monitoring>
+    <Rules>
+      <Rule ID="VMware.HorizonView.Performance.Pool.NumberOfAvailableMachines" Target="GripLogix!GripLogix.VMware.HorizonView.Pool" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Performance.PropertyBag.Pool">
+            <IntervalSeconds>300</IntervalSeconds>
+            <SyncTime />
+            <PoolName>$Target/Property[Type="GripLogix!GripLogix.VMware.HorizonView.Pool"]/Name$</PoolName>
+            <Counter>NumberOfAvailableMachines</Counter>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="VMware.HorizonView.Performance.GlobalEntitlement.PercentageOfSessions" Target="GripLogix!GripLogix.VMware.HorizonView.GlobalEntitlement" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Performance.PropertyBag.GlobalEntitlement">
+            <IntervalSeconds>300</IntervalSeconds>
+            <SyncTime />
+            <GlobalEntitlementId>$Target/Property[Type="GripLogix!GripLogix.VMware.HorizonView.GlobalEntitlement"]/Id$</GlobalEntitlementId>
+            <Counter>PercentageOfSessions</Counter>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="VMware.HorizonView.Performance.Pool.NumberOfMachines" Target="GripLogix!GripLogix.VMware.HorizonView.Pool" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Performance.PropertyBag.Pool">
+            <IntervalSeconds>300</IntervalSeconds>
+            <SyncTime />
+            <PoolName>$Target/Property[Type="GripLogix!GripLogix.VMware.HorizonView.Pool"]/Name$</PoolName>
+            <Counter>NumberOfMachines</Counter>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="VMware.HorizonView.Performance.Pool.PercentageOfSessions" Target="GripLogix!GripLogix.VMware.HorizonView.Pool" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Performance.PropertyBag.Pool">
+            <IntervalSeconds>300</IntervalSeconds>
+            <SyncTime />
+            <PoolName>$Target/Property[Type="GripLogix!GripLogix.VMware.HorizonView.Pool"]/Name$</PoolName>
+            <Counter>PercentageOfSessions</Counter>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="VMware.HorizonView.Performance.Pool.NumberOfSessions" Target="GripLogix!GripLogix.VMware.HorizonView.Pool" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Performance.PropertyBag.Pool">
+            <IntervalSeconds>300</IntervalSeconds>
+            <SyncTime />
+            <PoolName>$Target/Property[Type="GripLogix!GripLogix.VMware.HorizonView.Pool"]/Name$</PoolName>
+            <Counter>NumberOfSessions</Counter>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="VMware.HorizonView.Performance.GlobalEntitlement.NumberOfMachines" Target="GripLogix!GripLogix.VMware.HorizonView.GlobalEntitlement" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Performance.PropertyBag.GlobalEntitlement">
+            <IntervalSeconds>300</IntervalSeconds>
+            <SyncTime />
+            <GlobalEntitlementId>$Target/Property[Type="GripLogix!GripLogix.VMware.HorizonView.GlobalEntitlement"]/Id$</GlobalEntitlementId>
+            <Counter>NumberOfMachines</Counter>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="VMware.HorizonView.Performance.Service.DataStore.DataStoreFreeSpacePercentage" Target="GripLogix!GripLogix.VMware.HorizonView.Service" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Performance.PropertyBag.Service">
+            <IntervalSeconds>300</IntervalSeconds>
+            <SyncTime />
+            <Property>DataStoreName</Property>
+            <Counter>DataStoreFreeSpacePercentage</Counter>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="VMware.HorizonView.Performance.GlobalEntitlement.NumberOfAvailableMachines" Target="GripLogix!GripLogix.VMware.HorizonView.GlobalEntitlement" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Performance.PropertyBag.GlobalEntitlement">
+            <IntervalSeconds>300</IntervalSeconds>
+            <SyncTime />
+            <GlobalEntitlementId>$Target/Property[Type="GripLogix!GripLogix.VMware.HorizonView.GlobalEntitlement"]/Id$</GlobalEntitlementId>
+            <Counter>NumberOfAvailableMachines</Counter>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="VMware.HorizonView.Performance.GlobalEntitlement.NumberOfSessions" Target="GripLogix!GripLogix.VMware.HorizonView.GlobalEntitlement" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Performance.PropertyBag.GlobalEntitlement">
+            <IntervalSeconds>300</IntervalSeconds>
+            <SyncTime />
+            <GlobalEntitlementId>$Target/Property[Type="GripLogix!GripLogix.VMware.HorizonView.GlobalEntitlement"]/Id$</GlobalEntitlementId>
+            <Counter>NumberOfSessions</Counter>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="VMware.HorizonView.Performance.Service.DataStore.DataStoreFreeSpace" Target="GripLogix!GripLogix.VMware.HorizonView.Service" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Performance.PropertyBag.Service">
+            <IntervalSeconds>300</IntervalSeconds>
+            <SyncTime />
+            <Property>DataStoreName</Property>
+            <Counter>DataStoreFreeSpace</Counter>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="GripLogix.VMware.HorizonView.Rule.MachineState" Target="GripLogix!GripLogix.VMware.HorizonView.Service" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>Alert</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Monitoring.PropertyBag">
+            <IntervalSeconds>300</IntervalSeconds>
+            <SyncTime />
+          </DataSource>
+        </DataSources>
+        <ConditionDetection ID="CD" TypeID="System!System.ExpressionFilter">
+          <Expression>
+            <And>
+              <Expression>
+                <Exists>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='MachineName']</XPathQuery>
+                  </ValueExpression>
+                </Exists>
+              </Expression>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='BasicState']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">ERROR</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </And>
+          </Expression>
+        </ConditionDetection>
+        <WriteActions>
+          <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
+            <Priority>1</Priority>
+            <Severity>2</Severity>
+            <AlertMessageId>$MPElement[Name="GripLogix.VMware.HorizonView.Rule.MachineState.AlertMessage"]$</AlertMessageId>
+            <AlertParameters>
+              <!--<AlertParameter1>$Data/Property[@Name='MachineName']$</AlertParameter1>-->
+              <AlertParameter2>$Data/Property[@Name='BasicState']$</AlertParameter2>
+            </AlertParameters>
+            <Suppression>
+              <!--<SuppressionValue>$Data/Property[@Name='MachineName']$</SuppressionValue>
+              <SuppressionValue>$Data/Property[@Name='BasicState']$</SuppressionValue>-->
+              <SuppressionValue>$Data/Property[@Name='BasicState']$</SuppressionValue>
+            </Suppression>
+          </WriteAction>
+        </WriteActions>
+      </Rule>
+      <Rule ID="GripLogix.VMware.HorizonView.Rule.HypervisorConnectionState" Target="GripLogix!GripLogix.VMware.HorizonView.Server" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>Alert</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Monitoring.Server.PropertyBag">
+            <IntervalSeconds>300</IntervalSeconds>
+            <SyncTime />
+          </DataSource>
+        </DataSources>
+        <ConditionDetection ID="CD" TypeID="System!System.ExpressionFilter">
+          <Expression>
+            <And>
+              <Expression>
+                <Exists>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='HypervisorHostName']</XPathQuery>
+                  </ValueExpression>
+                </Exists>
+              </Expression>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='HypervisorConnectionState']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>NotEqual</Operator>
+                  <ValueExpression>
+                    <Value Type="String">TESTCONNECTED</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </And>
+          </Expression>
+        </ConditionDetection>
+        <WriteActions>
+          <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
+            <Priority>1</Priority>
+            <Severity>2</Severity>
+            <AlertMessageId>$MPElement[Name="GripLogix.VMware.HorizonView.Rule.HypervisorConnectionState.AlertMessage"]$</AlertMessageId>
+            <AlertParameters>
+              <AlertParameter1>$Data/Property[@Name='HypervisorHostName']$</AlertParameter1>
+              <AlertParameter2>$Data/Property[@Name='HypervisorConnectionState']$</AlertParameter2>
+            </AlertParameters>
+            <Suppression>
+              <SuppressionValue>$Data/Property[@Name='HypervisorHostName']$</SuppressionValue>
+              <SuppressionValue>$Data/Property[@Name='HypervisorConnectionState']$</SuppressionValue>
+            </Suppression>
+          </WriteAction>
+        </WriteActions>
+      </Rule>
+      <Rule ID="GripLogix.VMware.HorizonView.Rule.DataStoreFreeSpacePercentage" Target="GripLogix!GripLogix.VMware.HorizonView.Service" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>Alert</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="GripLogix.VMware.HorizonView.DataSource.Monitoring.PropertyBag.Condition">
+            <IntervalSeconds>300</IntervalSeconds>
+            <SyncTime />
+            <Counter>DataStoreFreeSpacePercentage</Counter>
+            <Threshold>20</Threshold>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
+            <Priority>1</Priority>
+            <Severity>2</Severity>
+            <AlertMessageId>$MPElement[Name="GripLogix.VMware.HorizonView.Rule.DataStoreFreeSpacePercentage.AlertMessage"]$</AlertMessageId>
+            <AlertParameters>
+              <AlertParameter1>$Data/Property[@Name='DataStoreName']$</AlertParameter1>
+              <AlertParameter2>$Data/Property[@Name='DataStoreFreeSpacePercentage']$</AlertParameter2>
+            </AlertParameters>
+            <Suppression>
+              <SuppressionValue>$Data/Property[@Name='DataStoreName']$</SuppressionValue>
+              <SuppressionValue>$Data/Property[@Name='DataStoreFreeSpacePercentage']$</SuppressionValue>
+            </Suppression>
+          </WriteAction>
+        </WriteActions>
+      </Rule>
+    </Rules>
+    <Monitors>
+      <UnitMonitor ID="GripLogix.VMware.HorizonView.Monitor.HorizonViewWindowsService.Availability" Accessibility="Internal" Enabled="true" Target="GripLogix!GripLogix.VMware.HorizonView.WindowsService" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="GripLogix.VMware.HorizonView.Monitor.HorizonViewWindowsService.Availability.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Running" MonitorTypeStateID="Running" HealthState="Success" />
+          <OperationalState ID="NotRunning" MonitorTypeStateID="NotRunning" HealthState="Error" />
+        </OperationalStates>
+        <Configuration>
+          <ComputerName>$Target/Host/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <ServiceName>$Target/Property[Type="GripLogix!GripLogix.VMware.HorizonView.WindowsService"]/Name$</ServiceName>
+          <CheckStartupType>true</CheckStartupType>
+        </Configuration>
+      </UnitMonitor>
+      <UnitMonitor ID="GripLogix.VMware.HorizonView.Monitor.Pool.PercentageOfSessions" Accessibility="Internal" Enabled="true" Target="GripLogix!GripLogix.VMware.HorizonView.Pool" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="GripLogix.VMware.HorizonView.MonitorType.Pool.Counter.2state.up" ConfirmDelivery="false">
+        <Category>PerformanceHealth</Category>
+        <AlertSettings AlertMessage="GripLogix.VMware.HorizonView.Monitor.Pool.PercentageOfSessions.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="FAILED" MonitorTypeStateID="FAILED" HealthState="Error" />
+          <OperationalState ID="SUCCESS" MonitorTypeStateID="SUCCESS" HealthState="Success" />
+        </OperationalStates>
+        <Configuration>
+          <IntervalSeconds>300</IntervalSeconds>
+          <SyncTime />
+          <Property>PercentageOfSessions</Property>
+          <PropertyThreshold>95</PropertyThreshold>
+          <PoolName>$Target/Property[Type="GripLogix!GripLogix.VMware.HorizonView.Pool"]/Name$</PoolName>
+        </Configuration>
+      </UnitMonitor>
+      <UnitMonitor ID="GripLogix.VMware.HorizonView.Monitor.Server.HypervisorConnectionStatus" Accessibility="Internal" Enabled="true" Target="GripLogix!GripLogix.VMware.HorizonView.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="GripLogix.VMware.HorizonView.MonitorType.HorizonViewServer.2state" ConfirmDelivery="false">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="GripLogix.VMware.HorizonView.Monitor.Server.HypervisorConnectionStatus.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="FAILED" MonitorTypeStateID="FAILED" HealthState="Error" />
+          <OperationalState ID="SUCCESS" MonitorTypeStateID="SUCCESS" HealthState="Success" />
+        </OperationalStates>
+        <Configuration>
+          <IntervalSeconds>300</IntervalSeconds>
+          <SyncTime />
+          <Property>HypervisorConnectionState</Property>
+          <PropertyExpectedString>KO</PropertyExpectedString>
+          <HorizonViewServerName>$Target/Property[Type="GripLogix!GripLogix.VMware.HorizonView.Server"]/Name$</HorizonViewServerName>
+        </Configuration>
+      </UnitMonitor>
+      <UnitMonitor ID="GripLogix.VMware.HorizonView.Monitor.Server.HorizonViewServerStatus" Accessibility="Internal" Enabled="true" Target="GripLogix!GripLogix.VMware.HorizonView.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="GripLogix.VMware.HorizonView.MonitorType.HorizonViewServer.2state" ConfirmDelivery="false">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="GripLogix.VMware.HorizonView.Monitor.Server.HorizonViewServerStatus.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="FAILED" MonitorTypeStateID="FAILED" HealthState="Error" />
+          <OperationalState ID="SUCCESS" MonitorTypeStateID="SUCCESS" HealthState="Success" />
+        </OperationalStates>
+        <Configuration>
+          <IntervalSeconds>300</IntervalSeconds>
+          <SyncTime />
+          <Property>HorizonViewServerStatus</Property>
+          <PropertyExpectedString>OK</PropertyExpectedString>
+          <HorizonViewServerName>$Target/Property[Type="GripLogix!GripLogix.VMware.HorizonView.Server"]/Name$</HorizonViewServerName>
+        </Configuration>
+      </UnitMonitor>
+      <UnitMonitor ID="GripLogix.VMware.HorizonView.Monitor.GlobalEntitlement.PercentageOfSessions" Accessibility="Internal" Enabled="true" Target="GripLogix!GripLogix.VMware.HorizonView.GlobalEntitlement" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="GripLogix.VMware.HorizonView.MonitorType.GlobalEntitlement.Counter.2state.up" ConfirmDelivery="false">
+        <Category>PerformanceHealth</Category>
+        <AlertSettings AlertMessage="GripLogix.VMware.HorizonView.Monitor.GlobalEntitlement.PercentageOfSessions.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="FAILED" MonitorTypeStateID="FAILED" HealthState="Error" />
+          <OperationalState ID="SUCCESS" MonitorTypeStateID="SUCCESS" HealthState="Success" />
+        </OperationalStates>
+        <Configuration>
+          <IntervalSeconds>300</IntervalSeconds>
+          <SyncTime />
+          <Property>PercentageOfSessions</Property>
+          <PropertyThreshold>95</PropertyThreshold>
+          <GlobalEntitlementId>$Target/Property[Type="GripLogix!GripLogix.VMware.HorizonView.GlobalEntitlement"]/Id$</GlobalEntitlementId>
+        </Configuration>
+      </UnitMonitor>
+    </Monitors>
+  </Monitoring>
+  <Presentation>
+    <StringResources>
+      <StringResource ID="GripLogix.VMware.HorizonView.Monitor.HorizonViewWindowsService.Availability.AlertMessage" />
+      <StringResource ID="GripLogix.VMware.HorizonView.Monitor.Pool.PercentageOfSessions.AlertMessage" />
+      <StringResource ID="GripLogix.VMware.HorizonView.Monitor.Server.HypervisorConnectionStatus.AlertMessage" />
+      <StringResource ID="GripLogix.VMware.HorizonView.Monitor.Server.HorizonViewServerStatus.AlertMessage" />
+      <StringResource ID="GripLogix.VMware.HorizonView.Monitor.GlobalEntitlement.PercentageOfSessions.AlertMessage" />
+      <StringResource ID="GripLogix.VMware.HorizonView.Rule.MachineState.AlertMessage" />
+      <StringResource ID="GripLogix.VMware.HorizonView.Rule.HypervisorConnectionState.AlertMessage" />
+      <StringResource ID="GripLogix.VMware.HorizonView.Rule.DataStoreFreeSpacePercentage.AlertMessage" />
+    </StringResources>
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="VMware.HorizonView.Performance.Pool.NumberOfAvailableMachines">
+          <Name>VMware Horizon Pool Number of Available Machines Performance Collection Rule</Name>
+          <Description>Pool Number of Available Machines Performance Collection Rule</Description>
+        </DisplayString>
+        <DisplayString ElementID="VMware.HorizonView.Performance.GlobalEntitlement.PercentageOfSessions">
+          <Name>VMware Horizon Global Entitlement Percentage of Sessions Performance Collection Rule</Name>
+          <Description>Global Entitlement PercentageOfSessions Performance Collection Rule</Description>
+        </DisplayString>
+        <DisplayString ElementID="VMware.HorizonView.Performance.Pool.NumberOfMachines">
+          <Name>VMware Horizon Pool Number of Machines Performance Collection Rule</Name>
+          <Description>Pool Number of Machines Performance Collection Rule</Description>
+        </DisplayString>
+        <DisplayString ElementID="VMware.HorizonView.Performance.Pool.PercentageOfSessions">
+          <Name>VMware Horizon Pool Percentage of Sessions Performance Collection Rule</Name>
+          <Description>Pool Percentage of Sessions Performance Collection Rule</Description>
+        </DisplayString>
+        <DisplayString ElementID="VMware.HorizonView.Performance.Pool.NumberOfSessions">
+          <Name>VMware Horizon Pool Number of Sessions Performance Collection Rule</Name>
+          <Description>Pool Number of Sessions Performance Collection Rule</Description>
+        </DisplayString>
+        <DisplayString ElementID="VMware.HorizonView.Performance.GlobalEntitlement.NumberOfMachines">
+          <Name>VMware Horizon Global Entitlement Number of Machines Performance Collection Rule</Name>
+          <Description>Global Entitlement Number of Machines Performance Collection Rule</Description>
+        </DisplayString>
+        <DisplayString ElementID="VMware.HorizonView.Performance.Service.DataStore.DataStoreFreeSpacePercentage">
+          <Name>VMware Horizon Data Store Free Space % Performance Collection Rule</Name>
+          <Description>Data Store Free Space % Performance Collection Rule</Description>
+        </DisplayString>
+        <DisplayString ElementID="VMware.HorizonView.Performance.GlobalEntitlement.NumberOfAvailableMachines">
+          <Name>VMware Horizon Global Entitlement Number of Available Machines Performance Collection Rule</Name>
+          <Description>Global Entitlement Number of Available Machines Performance Collection Rule</Description>
+        </DisplayString>
+        <DisplayString ElementID="VMware.HorizonView.Performance.GlobalEntitlement.NumberOfSessions">
+          <Name>VMware Horizon Global Entitlement Number of Sessions Performance Collection Rule</Name>
+          <Description>Global Entitlement Number of Sessions Performance Collection Rule</Description>
+        </DisplayString>
+        <DisplayString ElementID="VMware.HorizonView.Performance.Service.DataStore.DataStoreFreeSpace">
+          <Name>VMware Horizon DataStore Free Space Performance Collection Rule</Name>
+          <Description>Data Store Free Space Performance Collection Rule</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Rule.MachineState">
+          <Name>VMware Horizon Machine State Alerting</Name>
+          <Description>Machine State Alerting.</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Rule.MachineState.AlertMessage">
+          <Name>Machine State Error(s)</Name>
+          <Description>
+            HorizonView reports Basic State error(s).
+          </Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Rule.HypervisorConnectionState">
+          <Name>VMware Horizon Hypervisor Connection State Alerting</Name>
+          <Description>VMware Horizon Hypervisor Connection State Alerting</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Rule.HypervisorConnectionState.AlertMessage">
+          <Name>Hypervisor Connection State Error for machine {0}</Name>
+          <Description>
+            HorizonView reports a Hypervisor Connection State error.
+            Host Name: {0}
+            Host State: {1}
+          </Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Rule.DataStoreFreeSpacePercentage">
+          <Name>VMware Horizon Data Store Free Space Percentage Alerting</Name>
+          <Description>Data Store Free Space Percentage.</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Rule.DataStoreFreeSpacePercentage.AlertMessage">
+          <Name>Free Space % for Data Store {0} too low</Name>
+          <Description>
+            Free Space % {0} too low.
+            Data Store: {0}
+            % Free Space: {1}
+          </Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.HorizonViewWindowsService.Availability">
+          <Name>VMware Horizon Windows Service Monitor</Name>
+          <Description>Windows Service Monitor</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.HorizonViewWindowsService.Availability.AlertMessage">
+          <Name>Horizon Windows Service not running</Name>
+          <Description>Horizon Windows Service not running.</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.HorizonViewWindowsService.Availability" SubElementID="Running">
+          <Name>Running</Name>
+          <Description>Running</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.HorizonViewWindowsService.Availability" SubElementID="NotRunning">
+          <Name>NotRunning</Name>
+          <Description>NotRunning</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.Pool.PercentageOfSessions">
+          <Name>VMware Horizon % Sessions</Name>
+          <Description>Pool % Sessions Monitor.</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.Pool.PercentageOfSessions.AlertMessage">
+          <Name>% of Sessions too high</Name>
+          <Description>
+            % of Sessions too high.
+
+            Check Health Explorer for more details.
+          </Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.Pool.PercentageOfSessions" SubElementID="FAILED">
+          <Name>FAILED</Name>
+          <Description>FAILED</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.Pool.PercentageOfSessions" SubElementID="SUCCESS">
+          <Name>SUCCESS</Name>
+          <Description>SUCCESS</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.Server.HypervisorConnectionStatus">
+          <Name>VMware Horizon Hypervisor Connection Status</Name>
+          <Description>Hypervisor Connection Status Monitor.</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.Server.HypervisorConnectionStatus.AlertMessage">
+          <Name>Hosting Connection with critical state detected</Name>
+          <Description>
+            Hosting Connection with critical state detected.
+
+            - Check Health Explorer for more details.
+            - Check other generated alerts for this Horizon Server to see which Hosting Connections have failed.
+          </Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.Server.HypervisorConnectionStatus" SubElementID="FAILED">
+          <Name>FAILED</Name>
+          <Description>FAILED</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.Server.HypervisorConnectionStatus" SubElementID="SUCCESS">
+          <Name>SUCCESS</Name>
+          <Description>SUCCESS</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.Server.HorizonViewServerStatus">
+          <Name>VMware Horizon Horizon Server Status</Name>
+          <Description>Horizon Server Status Monitor.</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.Server.HorizonViewServerStatus.AlertMessage">
+          <Name>Horizon Server is in a critical state</Name>
+          <Description>The Horizon Server is in a critical state. Check health explorer for more details.</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.Server.HorizonViewServerStatus" SubElementID="FAILED">
+          <Name>FAILED</Name>
+          <Description>FAILED</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.Server.HorizonViewServerStatus" SubElementID="SUCCESS">
+          <Name>SUCCESS</Name>
+          <Description>SUCCESS</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.GlobalEntitlement.PercentageOfSessions">
+          <Name>VMware Horizon % Sessions</Name>
+          <Description>Global Entitlement % Sessions Monitor.</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.GlobalEntitlement.PercentageOfSessions.AlertMessage">
+          <Name>% of Sessions too hig</Name>
+          <Description>
+            % of Sessions too high.
+
+            Check Health Explorer for more details.
+          </Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.GlobalEntitlement.PercentageOfSessions" SubElementID="FAILED">
+          <Name>FAILED</Name>
+          <Description>FAILED</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitor.GlobalEntitlement.PercentageOfSessions" SubElementID="SUCCESS">
+          <Name>SUCCESS</Name>
+          <Description>SUCCESS</Description>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Monitoring">
+          <Name>VMware Horizon Monitoring</Name>
+        </DisplayString>
+      </DisplayStrings>
+      <KnowledgeArticles></KnowledgeArticles>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPack>

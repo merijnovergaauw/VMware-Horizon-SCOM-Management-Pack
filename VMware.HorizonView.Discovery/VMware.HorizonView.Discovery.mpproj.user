@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <DeploymentNextVersion>1.0.0.23</DeploymentNextVersion>
+    <DeploymentAutoIncrementVersion>True</DeploymentAutoIncrementVersion>
+    <DeploymentStartAction>DeployOnly</DeploymentStartAction>
+    <DeploymentWebConsoleUrl />
+    <DeploymentCommand />
+    <DeploymentCommandArguments />
+    <DeploymentDependencyMode>EntireSolution</DeploymentDependencyMode>
+    <DeploymentServerName>
+    </DeploymentServerName>
+    <DeploymentCredentials>AskForCredentials</DeploymentCredentials>
+    <DeploymentCookie>5249495629925527904</DeploymentCookie>
+  </PropertyGroup>
+</Project>

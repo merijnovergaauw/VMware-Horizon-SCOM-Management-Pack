@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ManagementPack SchemaVersion="2.0" ContentReadable="true" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Manifest>
+    <Identity>
+      <ID>GripLogix.VMware.HorizonView.Views</ID>
+      <Version>1.0.0.23</Version>
+    </Identity>
+    <Name>VMware.HorizonView.Views</Name>
+    <References>
+      <Reference Alias="SC">
+        <ID>Microsoft.SystemCenter.Library</ID>
+        <Version>7.0.8433.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="System">
+        <ID>System.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="GripLogix">
+        <ID>GripLogix.VMware.HorizonView.Discovery</ID>
+        <Version>1.0.0.22</Version>
+        <PublicKeyToken>1947a4ec16eb327a</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  <Presentation>
+    <Views>
+      <View ID="GripLogix.VMware.HorizonView.Service.DiagramView" Accessibility="Public" Enabled="true" Target="GripLogix!GripLogix.VMware.HorizonView.Service" TypeID="SC!Microsoft.SystemCenter.DiagramViewType" Visible="true">
+        <Category>Diagram</Category>
+        <Criteria />
+        <Presentation>
+          <DiagramViewCriteria>
+            <DiagramViewDisplay ShowVirtualGroup="true">
+              <NodesPerRow>8</NodesPerRow>
+            </DiagramViewDisplay>
+          </DiagramViewCriteria>
+        </Presentation>
+      </View>
+      <View ID="GripLogix.VMware.HorizonView.Service.AlertView" Accessibility="Internal" Enabled="true" Target="GripLogix!GripLogix.VMware.HorizonView.Service" TypeID="SC!Microsoft.SystemCenter.AlertViewType" Visible="true">
+        <Category>Alert</Category>
+        <Criteria>
+          <ResolutionState>
+            <StateRange Operator="NotEquals">255</StateRange>
+          </ResolutionState>
+        </Criteria>
+      </View>
+      <View ID="GripLogix.VMware.HorizonView.Server.StateView" Accessibility="Internal" Enabled="true" Target="GripLogix!GripLogix.VMware.HorizonView.Server" TypeID="SC!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>State</Category>
+      </View>
+      <View ID="GripLogix.VMware.HorizonView.Server.PerformanceView" Accessibility="Internal" Enabled="true" Target="GripLogix!GripLogix.VMware.HorizonView.Server" TypeID="SC!Microsoft.SystemCenter.PerformanceViewType" Visible="true">
+        <Category>Performance</Category>
+      </View>
+      <View ID="GripLogix.VMware.HorizonView.GlobalEntitlement.StateView" Accessibility="Internal" Enabled="true" Target="GripLogix!GripLogix.VMware.HorizonView.GlobalEntitlement" TypeID="SC!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>State</Category>
+      </View>
+      <View ID="GripLogix.VMware.HorizonView.GlobalEntitlement.PerformanceView" Accessibility="Internal" Enabled="true" Target="GripLogix!GripLogix.VMware.HorizonView.GlobalEntitlement" TypeID="SC!Microsoft.SystemCenter.PerformanceViewType" Visible="true">
+        <Category>Performance</Category>
+      </View>
+      <View ID="GripLogix.VMware.HorizonView.Pool.StateView" Accessibility="Internal" Enabled="true" Target="GripLogix!GripLogix.VMware.HorizonView.Pool" TypeID="SC!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>State</Category>
+      </View>
+      <View ID="GripLogix.VMware.HorizonView.Pool.PerformanceView" Accessibility="Internal" Enabled="true" Target="GripLogix!GripLogix.VMware.HorizonView.Pool" TypeID="SC!Microsoft.SystemCenter.PerformanceViewType" Visible="true">
+        <Category>Performance</Category>
+      </View>
+      <View ID="GripLogix.VMware.HorizonView.PerformanceView" Accessibility="Internal" Enabled="true" Target="GripLogix!GripLogix.VMware.HorizonView.Service" TypeID="SC!Microsoft.SystemCenter.PerformanceViewType" Visible="true">
+        <Category>Performance</Category>
+      </View>
+    </Views>
+    <Folders>
+      <Folder ID="GripLogix.VMware.HorizonView.RootFolder" Accessibility="Internal" ParentFolder="SC!Microsoft.SystemCenter.Monitoring.ViewFolder.Root" />
+    </Folders>
+    <FolderItems>
+      <FolderItem ElementID="GripLogix.VMware.HorizonView.Service.DiagramView" ID="GripLogix.VMware.HorizonView.Service.DiagramView.FolderItem" Folder="GripLogix.VMware.HorizonView.RootFolder" />
+      <FolderItem ElementID="GripLogix.VMware.HorizonView.Service.AlertView" ID="GripLogix.VMware.HorizonView.Service.AlertView.FolderItem" Folder="GripLogix.VMware.HorizonView.RootFolder" />
+      <FolderItem ElementID="GripLogix.VMware.HorizonView.Server.StateView" ID="GripLogix.VMware.HorizonView.Server.StateView.FolderItem" Folder="GripLogix.VMware.HorizonView.RootFolder" />
+      <FolderItem ElementID="GripLogix.VMware.HorizonView.GlobalEntitlement.StateView" ID="GripLogix.VMware.HorizonView.GlobalEntitlement.StateView.FolderItem" Folder="GripLogix.VMware.HorizonView.RootFolder" />
+      <FolderItem ElementID="GripLogix.VMware.HorizonView.GlobalEntitlement.PerformanceView" ID="GripLogix.VMware.HorizonView.GlobalEntitlement.PerformanceView.FolderItem" Folder="GripLogix.VMware.HorizonView.RootFolder" />
+      <FolderItem ElementID="GripLogix.VMware.HorizonView.Pool.StateView" ID="GripLogix.VMware.HorizonView.Pool.StateView.FolderItem" Folder="GripLogix.VMware.HorizonView.RootFolder" />
+      <FolderItem ElementID="GripLogix.VMware.HorizonView.Pool.PerformanceView" ID="GripLogix.VMware.HorizonView.Pool.PerformanceView.FolderItem" Folder="GripLogix.VMware.HorizonView.RootFolder" />
+      <FolderItem ElementID="GripLogix.VMware.HorizonView.PerformanceView" ID="GripLogix.VMware.HorizonView.PerformanceView.FolderItem" Folder="GripLogix.VMware.HorizonView.RootFolder" />
+    </FolderItems>
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.RootFolder">
+          <Name>VMware Horizon</Name>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Service.DiagramView">
+          <Name>VMware Horizon</Name>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Service.AlertView">
+          <Name>Active Alerts</Name>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Server.StateView">
+          <Name>VMware Horizon Server</Name>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Server.PerformanceView">
+          <Name>VMware Horizon Server</Name>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.GlobalEntitlement.StateView">
+          <Name>VMware Horizon Global Entitlement</Name>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.GlobalEntitlement.PerformanceView">
+          <Name>VMware Horizon Global Entitlement</Name>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Pool.StateView">
+          <Name>VMware Horizon Pool</Name>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Pool.PerformanceView">
+          <Name>VMware Horizon Pool</Name>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.PerformanceView">
+          <Name>VMware Horizon</Name>
+        </DisplayString>
+        <DisplayString ElementID="GripLogix.VMware.HorizonView.Views">
+          <Name>VMware Horizon Views</Name>
+        </DisplayString>
+      </DisplayStrings>
+      <KnowledgeArticles></KnowledgeArticles>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPack>
