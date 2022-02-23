@@ -11,10 +11,10 @@ Currently contains the following monitoring:
 
 Monitors:
 * VMware Horizon Windows Service Monitor
-* VMware Horizon % Sessions
+* VMware Horizon % Sessions (Global Entitlements)
+* VMware Horizon % Sessions (Pools)
 * VMware Horizon Hypervisor Connection Status
 * VMware Horizon Horizon Server Status
-* VMware Horizon % Sessions
 
 Rules:
 * VMware Horizon Global Entitlement Percentage of Sessions Performance Collection Rule
