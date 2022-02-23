@@ -11,7 +11,7 @@ Currently contains the following monitoring:
 
 Monitors:
 * VMware Horizon Windows Service Monitor
-* VMware Horizon % Sessions (Global Entitlements)
+* VMware Horizon % Sessions (Global Entitlement)
 * VMware Horizon % Sessions (Pool)
 * VMware Horizon Hypervisor Connection Status
 * VMware Horizon Horizon Server Status
