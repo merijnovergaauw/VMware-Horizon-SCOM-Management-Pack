@@ -1,5 +1,5 @@
 # VMware Horizon SCOM Mangement Pack
-VMware Horizon SCOM Management Pack
+VMware Horizon SCOM Management Pack 👓
 
 This VMware Horizon SCOM Management Pack contains some essential infrastructure and capacity usage monitoring for VMware Horizon View VDI platforms. Among others, it makes use of a Resource Pool to run several workflows. It can be used as a framework to add more monitoring workflows to.
 
