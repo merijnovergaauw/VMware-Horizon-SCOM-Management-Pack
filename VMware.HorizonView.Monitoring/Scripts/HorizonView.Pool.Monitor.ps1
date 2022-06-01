@@ -6,7 +6,7 @@ $params = "DomainName: $domainName, UserName: $userName"
 # Constants
 $DEBUG = $true
 
-# Constants used for event logging
+# Constants used for event logging.
 $SCRIPT_NAME			= 'HorizonView.Pool.Monitor.ps1'
 $EVENT_LEVEL_ERROR 		= 1
 $EVENT_LEVEL_WARNING 	= 2
@@ -35,7 +35,7 @@ function Log-DebugEvent
 	}
 #==================================================================================
 
-# Start script by setting up API object
+# Start script by setting up API object.
 $api = New-Object -comObject 'MOM.ScriptAPI'
 
 $message = "$SCRIPT_NAME script started. Parameters:`n$params"
@@ -83,14 +83,14 @@ Catch {message = "Import-Module. Error: $_."; Log-DebugEvent $ERROR_GENERATED $E
 Try {$hvServers = Get-SCOMClass -Name "GripLogix.VMware.HorizonView.Server" -ErrorAction Stop | Get-SCOMClassInstance | ? {$_.IsAvailable -eq $true} | Sort-Object -Unique @{E={$_.'[GripLogix.VMware.HorizonView.Server].Datacenter'.Value}}}
 Catch {$message = "Get-SCOMClass -Name GripLogix.VMware.HorizonView.Server failed. Error: $_."; Log-DebugEvent $ERROR_GENERATED $EVENT_LEVEL_ERROR $message}
 
-# Create credential
+# Create credential.
 $secPassword = $password | ConvertTo-SecureString -AsPlainText -Force
 $cred = New-Object System.Management.Automation.PSCredential (("$domainName\$userName"), $secPassword)
 
-# Create array for GlobalEntitlement metrics
+# Create array for GlobalEntitlement metrics.
 [System.Collections.ArrayList]$geArray = @()
 
-# Get data
+# Get data.
 ForEach ($hvServer in $hvServers)
 	{
     $hvServerName = $hvServer.DisplayName
@@ -106,7 +106,7 @@ ForEach ($hvServer in $hvServers)
     $dataCenter = $viewAPI.Pod.Pod_List() | ? {$_.LocalPod -eq $true}
 	$dataCenterName = $dataCenter.DisplayName
 
-	# Pool data collection
+	# Pool data collection.
 	$pools.Results.DesktopSummaryData | ? {$_ -ne $null} | % {
 		$poolName = [string]$_.DisplayName
 		$poolGeId = [string]$_.GlobalEntitlement.Id
@@ -135,7 +135,7 @@ ForEach ($hvServer in $hvServers)
 
 		Log-DebugEvent $PROPERTYBAG_CREATED $EVENT_LEVEL_INFO $message
 
-		# Calculate GlobalEntitlement metrics and create object array
+		# Calculate GlobalEntitlement metrics and create object array.
 		If ($poolGeId -ne "")
 			{
 			If (($geArray | % {$_.geId}) -notcontains $poolGeId) 
@@ -170,7 +170,7 @@ ForEach ($hvServer in $hvServers)
 			}
 		}	
 		
-	# Machine data collection
+	# Machine data collection.
 	$queryMachineSummaryView = New-Object "Vmware.Hv.QueryDefinition"  
 	$queryMachineSummaryView.queryEntityType = 'MachineSummaryView'   
 
